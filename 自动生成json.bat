@@ -55,10 +55,6 @@ if errorlevel 1 (
 :: 提示完成
 echo.
 echo 文件 %filename% 已成功创建/更新！
-echo 文件内容如下：
-echo.
-type "%filename%"
-echo.
 
 :: 修改文件后缀名为 .json
 set "new_filename=config.json"
