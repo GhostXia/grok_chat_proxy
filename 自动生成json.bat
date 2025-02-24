@@ -56,8 +56,20 @@ if errorlevel 1 (
 echo.
 echo 文件 %filename% 已成功创建/更新！
 
-:: 修改文件后缀名为 .json
-set "new_filename=config.json"
+:: 重命名文件为 .json
+if exist "%new_filename%" (
+    echo 检测到目标文件 %new_filename% 已存在。
+    call :ask_confirm "是否覆盖现有文件？(Y/N)"
+    if /i "%confirm%"=="n" (
+        echo 已取消操作，文件未重命名。
+        pause
+        exit /b
+    )
+    :: 删除现有文件
+    del "%new_filename%"
+)
+
+:: 执行重命名
 ren "%filename%" "%new_filename%"
 
 :: 检查重命名是否成功
