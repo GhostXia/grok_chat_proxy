@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, abort
 import requests
 import io
 import json
@@ -8,6 +8,26 @@ import random
 import time
 
 app = Flask(__name__)
+
+# 配置 API 密钥
+API_KEY = "your_secure_api_key_here"  # 设置一个安全的 API 密钥。酒馆请求头示例：X-API-KEY: your_secure_api_key_here
+
+# 控制 API 验证功能的开关
+ENABLE_API_AUTH = False  # 设置为 True 启用验证，False 禁用验证，首字母必须大写
+
+# 检查 API 密钥的实用函数
+def check_api_key():
+    api_key = request.headers.get("X-API-KEY")  # 从请求头中获取 X-API-KEY
+    if api_key != API_KEY:
+        abort(403, "Forbidden: Invalid API key")  # 如果密钥不匹配，则返回 403 错误
+
+# 在所有请求之前进行 API 密钥验证（如果启用）
+@app.before_request
+def authenticate():
+    if ENABLE_API_AUTH:
+        check_api_key()  # 只有当 ENABLE_API_AUTH 为!).
+
+
 
 TARGET_URL = "https://grok.com/rest/app-chat/conversations/new"
 # CHECK_URL = "https://grok.com/rest/rate-limits"
